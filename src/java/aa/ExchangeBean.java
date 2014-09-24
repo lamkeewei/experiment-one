@@ -6,8 +6,8 @@ import java.util.*;
 public class ExchangeBean {
 
   // location of log files - change if necessary
-  private final String MATCH_LOG_FILE = "c:\\temp\\matched.log";
-  private final String REJECTED_BUY_ORDERS_LOG_FILE = "c:\\temp\\rejected.log";
+  private final String MATCH_LOG_FILE = "/tmp/matched.log";
+  private final String REJECTED_BUY_ORDERS_LOG_FILE = "/tmp/rejected.log";
 
   // used to calculate remaining credit available for buyers
   private final int DAILY_CREDIT_LIMIT_FOR_BUYERS = 1000000;
