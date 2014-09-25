@@ -14,11 +14,15 @@ public class ExchangeBean {
 
   // used for keeping track of unfulfilled asks and bids in the system.
   // once asks or bids are matched, they must be removed from these arraylists.
+  
+  // TODO: Change these two to rely on a database
   private ArrayList<Ask> unfulfilledAsks = new ArrayList<Ask>();
   private ArrayList<Bid> unfulfilledBids = new ArrayList<Bid>();
 
   // used to keep track of all matched transactions (asks/bids) in the system
   // matchedTransactions is cleaned once the records are written to the log file successfully
+  
+  // TODO: Change this to rely on a database
   private ArrayList<MatchedTransaction> matchedTransactions = new ArrayList<MatchedTransaction>();
 
   // keeps track of the latest price for each of the 3 stocks
@@ -31,6 +35,8 @@ public class ExchangeBean {
   // credit limit should be rejected and logged
   // The key for this Hashtable is the user ID of the buyer, and the corresponding value is the REMAINING credit limit
   // the remaining credit limit should not go below 0 under any circumstance!
+  
+  // TODO: This should be queried dynamically
   private Hashtable <String, Integer> creditRemaining = new Hashtable<String, Integer>();
 
 
@@ -233,6 +239,8 @@ public class ExchangeBean {
   // call this method immediatley when a new bid (buying order) comes in
   // this method returns false if this buy order has been rejected because of a credit limit breach
   // it returns true if the bid has been successfully added
+  
+  // TODO: Entry point for adding a new bid
   public boolean placeNewBidAndAttemptMatch(Bid newBid) {
     // step 0: check if this bid is valid based on the buyer's credit limit
     boolean okToContinue = validateCreditLimit(newBid);
@@ -282,6 +290,7 @@ public class ExchangeBean {
   }
 
   // call this method immediatley when a new ask (selling order) comes in
+  // TODO: Entry point for adding a new ask
   public void placeNewAskAndAttemptMatch(Ask newAsk) {
     // step 1: insert new ask into unfulfilledAsks
     unfulfilledAsks.add(newAsk);
