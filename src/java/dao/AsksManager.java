@@ -57,6 +57,42 @@ public class AsksManager {
         return null;
     }
     
+    public static Ask getAskById(int id) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        Ask ask = null;
+        
+        try {
+            conn = ConnectionManager.getConnection();
+            String sql = "select * from asks where id=?";
+            pstmt = conn.prepareStatement(sql);
+            
+            pstmt.setInt(1, id);
+            rs = pstmt.executeQuery();
+                       
+            while(rs.next()) {
+                int askId = rs.getInt("id");
+                String stock = rs.getString("stock");
+                int price = rs.getInt("price");
+                String userId = rs.getString("userid");
+                Date date = rs.getDate("date");
+                String status = rs.getString("status");
+                
+                ask = new Ask(askId, stock, price, userId, date, status);
+            }            
+            
+            return ask; 
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(BidsManager.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            ConnectionManager.close(conn, pstmt, null);
+        }
+        
+        return ask;
+    }
+    
     public static List<Ask> getAllUnfulfiledAsk(){
         List<Ask> asks = new ArrayList<>();
         Connection conn = null;
@@ -169,5 +205,10 @@ public class AsksManager {
         }
         
         return null;
+    }
+    
+    public static void main(String[] args) {
+        Ask ask = new Ask("SMU", 12, "lamkeewei");
+        addAsk(ask);
     }
 }

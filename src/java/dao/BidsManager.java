@@ -57,6 +57,42 @@ public class BidsManager {
         return null;
     }
     
+    public static Bid getBidById(int id) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        Bid bid = null;
+        
+        try {
+            conn = ConnectionManager.getConnection();
+            String sql = "select * from bids where id=?";
+            pstmt = conn.prepareStatement(sql);
+            
+            pstmt.setInt(1, id);
+            rs = pstmt.executeQuery();
+                       
+            while(rs.next()) {
+                int bidId = rs.getInt("id");
+                String stock = rs.getString("stock");
+                int price = rs.getInt("price");
+                String userId = rs.getString("userid");
+                Date date = rs.getDate("date");
+                String status = rs.getString("status");
+                
+                bid = new Bid(id, stock, price, userId, date, status);
+            }            
+            
+            return bid; 
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(BidsManager.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            ConnectionManager.close(conn, pstmt, null);
+        }
+        
+        return bid;
+    }
+    
     public static List<Bid> getAllUnfulfiledBids(){
         List<Bid> bids = new ArrayList<>();
         Connection conn = null;
