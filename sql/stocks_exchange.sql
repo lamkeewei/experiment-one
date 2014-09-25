@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Sep 25, 2014 at 04:38 AM
+-- Generation Time: Sep 25, 2014 at 04:50 AM
 -- Server version: 5.6.16
 -- PHP Version: 5.4.24
 
@@ -29,11 +29,12 @@ SET time_zone = "+00:00";
 CREATE TABLE IF NOT EXISTS `asks` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `stock` varchar(5) NOT NULL,
-  `price` decimal(6,2) NOT NULL,
+  `price` int(11) NOT NULL,
   `userid` varchar(255) NOT NULL,
   `date` datetime NOT NULL,
+  `status` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 -- --------------------------------------------------------
 
