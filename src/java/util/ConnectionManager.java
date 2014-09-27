@@ -33,27 +33,27 @@ public class ConnectionManager {
      * @throws SQLException if an error occurs when connecting
      */
     public static Connection getConnection() throws SQLException {
-//    String message = "dbURL: " + dbURL
-//            + "  , dbUser: " + dbUser
-//            + "  , dbPassword: " + dbPassword;
+        String message = "dbURL: " + dbURL
+                + "  , dbUser: " + dbUser
+                + "  , dbPassword: " + dbPassword;
+
+        return DriverManager.getConnection(dbURL, dbUser, dbPassword);
+
+//        Context initCtx;
+//        Connection conn = null;
+//        try {
+//            initCtx = new InitialContext();
+//            Context envCtx = (Context) initCtx.lookup("java:comp/env");
 //
-//    return DriverManager.getConnection(dbURL, dbUser, dbPassword);
-
-        Context initCtx;
-        Connection conn = null;
-        try {
-            initCtx = new InitialContext();
-            Context envCtx = (Context) initCtx.lookup("java:comp/env");
-
-            // Look up our data source
-            DataSource ds = (DataSource) envCtx.lookup("jdbc/stocks_exchange");
-            // Allocate and use a connection from the pool
-            conn = ds.getConnection();
-        } catch (NamingException ex) {
-            Logger.getLogger(ConnectionManager.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        return conn;
+//            // Look up our data source
+//            DataSource ds = (DataSource) envCtx.lookup("jdbc/stocks_exchange");
+//            // Allocate and use a connection from the pool
+//            conn = ds.getConnection();
+//        } catch (NamingException ex) {
+//            Logger.getLogger(ConnectionManager.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        
+//        return conn;
     }
 
     /**
