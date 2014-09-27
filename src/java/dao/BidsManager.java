@@ -264,7 +264,7 @@ public class BidsManager {
         
         try {
             conn = ConnectionManager.getConnection();
-            String sql = "SELECT * from bids WHERE price = (SELECT MAX(price) AS max_price FROM bids WHERE stock=? AND status=\"not matched\") ORDER BY date LIMIT 1;";
+            String sql = "SELECT * from bids WHERE price = (SELECT MAX(price) AS max_price FROM bids WHERE stock=? AND status=\"not matched\") AND status=\"not matched\" ORDER BY date LIMIT 1;";
             pstmt = conn.prepareStatement(sql);
             
             pstmt.setString(1, stock);

@@ -262,7 +262,7 @@ public class AsksManager {
         
         try {
             conn = ConnectionManager.getConnection();
-            String sql = "SELECT * from asks WHERE price = (SELECT MIN(price) AS min_price FROM asks WHERE stock=? AND status=\"not matched\") ORDER BY date LIMIT 1;";
+            String sql = "SELECT * from asks WHERE price = (SELECT MIN(price) AS min_price FROM asks WHERE stock=? AND status=\"not matched\") AND status=\"not matched\" ORDER BY date LIMIT 1;";
             pstmt = conn.prepareStatement(sql);
             
             pstmt.setString(1, stock);
