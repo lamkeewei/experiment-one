@@ -24,7 +24,7 @@ import util.ConnectionManager;
  * @author lamkeewei
  */
 public class MatchedTransactionManager {
-    public void addMatchedTrasnaction(Bid bid, Ask ask, Date date, int price) {
+    public static void addMatchedTransaction(MatchedTransaction match) {
         Connection conn = null;
         PreparedStatement pstmt = null;
         
@@ -33,10 +33,11 @@ public class MatchedTransactionManager {
             String sql = "insert into matched_transaction(bid_id, ask_id, date, price, stock) values(?,?,?,?,?)";
             pstmt = conn.prepareStatement(sql);
             
-            pstmt.setInt(1, bid.getId());
-            pstmt.setInt(2, ask.getId());
-            pstmt.setDate(3, new java.sql.Date(date.getTime()));
-            pstmt.setInt(4, price);
+            pstmt.setInt(1, match.getBuyId());
+            pstmt.setInt(2, match.getAskId());
+            pstmt.setTimestamp(3, new java.sql.Timestamp(match.getDate().getTime()));
+            pstmt.setInt(4, match.getPrice());
+            pstmt.setString(5, match.getStock());
             
             pstmt.execute();
         } catch (SQLException ex) {
@@ -76,7 +77,7 @@ public class MatchedTransactionManager {
                 String askStock = rs.getString("A.stock");
                 int askPrice = rs.getInt("A.price");
                 String askUserId = rs.getString("A.userid");
-                Date askDate = rs.getDate("A.date");
+                Date askDate = rs.getTimestamp("A.date");
                 String askStatus = rs.getString("A.status");
                 
                 Ask ask = new Ask(askId, askStock, askPrice, askUserId, askDate, askStatus);

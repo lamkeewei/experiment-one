@@ -19,7 +19,6 @@ public class Bid {
         this.stock = stock;
         this.price = price;
         this.userId = userId;
-        this.date = new Date();
         this.status = Bid.NOT_MATCHED;
     }
 

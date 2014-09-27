@@ -49,7 +49,7 @@ public class AsksManager {
             return asks;
             
         } catch (SQLException ex) {
-            Logger.getLogger(BidsManager.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AsksManager.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             ConnectionManager.close(conn, pstmt, rs);
         }
@@ -85,7 +85,7 @@ public class AsksManager {
             return ask; 
             
         } catch (SQLException ex) {
-            Logger.getLogger(BidsManager.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AsksManager.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             ConnectionManager.close(conn, pstmt, null);
         }
@@ -120,7 +120,7 @@ public class AsksManager {
             return asks;
             
         } catch (SQLException ex) {
-            Logger.getLogger(BidsManager.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AsksManager.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             ConnectionManager.close(conn, pstmt, rs);
         }
@@ -134,18 +134,17 @@ public class AsksManager {
         
         try {
             conn = ConnectionManager.getConnection();
-            String sql = "insert into asks(stock, price, userid, date, status) values(?,?,?,?,?)";
+            String sql = "insert into asks(stock, price, userid, status) values(?,?,?,?)";
             pstmt = conn.prepareStatement(sql);
             
             pstmt.setString(1, ask.getStock());
             pstmt.setInt(2, ask.getPrice());
             pstmt.setString(3, ask.getUserId());
-            pstmt.setDate(4, new java.sql.Date(ask.getDate().getTime()));
-            pstmt.setString(5, ask.getStatus());
+            pstmt.setString(4, ask.getStatus());
             
             pstmt.execute();            
         } catch (SQLException ex) {
-            Logger.getLogger(BidsManager.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AsksManager.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             ConnectionManager.close(conn, pstmt, null);
         }
@@ -164,10 +163,31 @@ public class AsksManager {
             
             pstmt.execute();
         } catch (SQLException ex) {
-            Logger.getLogger(BidsManager.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AsksManager.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             ConnectionManager.close(conn, pstmt, null);
         } 
+    }
+    
+    public static void updateMatchAsk(Ask ask) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        
+        try {
+            conn = ConnectionManager.getConnection();
+            String sql = "UPDATE asks SET status=\"matched\" WHERE id=?";
+            
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, ask.getId());
+            
+            pstmt.executeUpdate();
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(AsksManager.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            ConnectionManager.close(conn, pstmt, null);
+        } 
+        
     }
     
     public static List<Ask> getAsksByStock(String stock) {
@@ -199,12 +219,92 @@ public class AsksManager {
             
             return asks;
         } catch (SQLException ex) {
-            Logger.getLogger(BidsManager.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AsksManager.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             ConnectionManager.close(conn, pstmt, rs);
         }
         
         return null;
+    }
+    
+    public static boolean hasUnfulfilledAsks(String stock) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        
+        try {
+            conn = ConnectionManager.getConnection();
+            String sql = "select * from asks where stock=? and status=\"not matched\"";
+            
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, stock);
+            
+            rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                return true;
+            }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(AsksManager.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            ConnectionManager.close(conn, pstmt, rs);
+        }
+        return false;
+    }
+    
+    public static Ask getLowestAsk(String stock) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        Ask ask = null;
+        
+        try {
+            conn = ConnectionManager.getConnection();
+            String sql = "SELECT * from asks WHERE price = (SELECT MIN(price) AS min_price FROM asks WHERE stock=? AND status=\"not matched\") ORDER BY date LIMIT 1;";
+            pstmt = conn.prepareStatement(sql);
+            
+            pstmt.setString(1, stock);
+            rs = pstmt.executeQuery();
+                       
+            while(rs.next()) {
+                int askId = rs.getInt("id");
+                int price = rs.getInt("price");
+                String userId = rs.getString("userid");
+                Date date = rs.getDate("date");
+                String status = rs.getString("status");
+                
+                ask = new Ask(askId, stock, price, userId, date, status);
+            }            
+            
+            return ask; 
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(AsksManager.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            ConnectionManager.close(conn, pstmt, null);
+        }
+        
+        return ask;
+    } 
+    
+    public static void clearAsks() {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        
+        try {
+            conn = ConnectionManager.getConnection();
+            String sql = "DELETE FROM asks";
+            
+            pstmt = conn.prepareStatement(sql);
+            pstmt.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(AsksManager.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            ConnectionManager.close(conn, pstmt, rs);
+        }
+        
     }
     
     public static void main(String[] args) {

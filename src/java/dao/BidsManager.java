@@ -134,14 +134,13 @@ public class BidsManager {
         
         try {
             conn = ConnectionManager.getConnection();
-            String sql = "insert into bids(stock, price, userid, date, status) values(?,?,?,?,?)";
+            String sql = "insert into bids(stock, price, userid, status) values(?,?,?,?)";
             pstmt = conn.prepareStatement(sql);
             
             pstmt.setString(1, bid.getStock());
             pstmt.setInt(2, bid.getPrice());
             pstmt.setString(3, bid.getUserId());
-            pstmt.setDate(4, new java.sql.Date(bid.getDate().getTime()));
-            pstmt.setString(5, bid.getStatus());
+            pstmt.setString(4, bid.getStatus());
             
             pstmt.execute();            
         } catch (SQLException ex) {
@@ -168,6 +167,27 @@ public class BidsManager {
         } finally {
             ConnectionManager.close(conn, pstmt, null);
         } 
+    }
+    
+    public static void updateMatchBid(Bid bid) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        
+        try {
+            conn = ConnectionManager.getConnection();
+            String sql = "UPDATE bids SET status=\"matched\" WHERE id=?";
+            
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, bid.getId());
+            
+            pstmt.executeUpdate();
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(BidsManager.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            ConnectionManager.close(conn, pstmt, null);
+        } 
+        
     }
     
     public static List<Bid> getBidsByStock(String stock) {
@@ -205,5 +225,85 @@ public class BidsManager {
         }
         
         return null;
+    }
+    
+    public static boolean hasUnfulfilledBids(String stock) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        
+        try {
+            conn = ConnectionManager.getConnection();
+            String sql = "select * from bids where stock=? and status=\"not matched\"";
+            
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, stock);
+            
+            rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                return true;
+            }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(BidsManager.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            ConnectionManager.close(conn, pstmt, rs);
+        }
+        return false;
+    }
+    
+    public static Bid getHighestBid(String stock) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        Bid bid = null;
+        
+        try {
+            conn = ConnectionManager.getConnection();
+            String sql = "SELECT * from bids WHERE price = (SELECT MAX(price) AS max_price FROM bids WHERE stock=? AND status=\"not matched\") ORDER BY date LIMIT 1;";
+            pstmt = conn.prepareStatement(sql);
+            
+            pstmt.setString(1, stock);
+            rs = pstmt.executeQuery();
+                       
+            while(rs.next()) {
+                int bidId = rs.getInt("id");
+                int price = rs.getInt("price");
+                String userId = rs.getString("userid");
+                Date date = rs.getDate("date");
+                String status = rs.getString("status");
+                
+                bid = new Bid(bidId, stock, price, userId, date, status);
+            }            
+            
+            return bid; 
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(BidsManager.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            ConnectionManager.close(conn, pstmt, null);
+        }
+        
+        return bid;
+    } 
+    
+    public static void clearBids() {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        
+        try {
+            conn = ConnectionManager.getConnection();
+            String sql = "DELETE FROM bids";
+            
+            pstmt = conn.prepareStatement(sql);
+            pstmt.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(BidsManager.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            ConnectionManager.close(conn, pstmt, rs);
+        }
+        
     }
 }

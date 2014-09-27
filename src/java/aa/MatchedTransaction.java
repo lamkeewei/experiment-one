@@ -32,6 +32,14 @@ public class MatchedTransaction {
   public Date getDate() {
     return date;
   }
+  
+  public int getBuyId() {
+    return bid.getId();
+  }
+  
+  public int getAskId() {
+    return ask.getId();
+  }
 
   public String getBuyerId() {
     return bid.getUserId();
