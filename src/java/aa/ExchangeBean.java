@@ -54,6 +54,7 @@ public class ExchangeBean {
     // dump all unfulfilled buy and sell orders
     AsksManager.clearAsks();
     BidsManager.clearBids();
+    MatchedTransactionManager.clearMatchedTransactions();
 
     // reset all credit limits of users
     creditRemaining.clear();

@@ -95,4 +95,24 @@ public class MatchedTransactionManager {
         }
         return null;
     }
+    
+    public static void clearMatchedTransactions() {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        
+        try {
+            conn = ConnectionManager.getConnection();
+            String sql = "DELETE FROM matched_transaction";
+            
+            pstmt = conn.prepareStatement(sql);
+            pstmt.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(MatchedTransactionManager.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            ConnectionManager.close(conn, pstmt, rs);
+        }
+        
+    }
+    
 }
