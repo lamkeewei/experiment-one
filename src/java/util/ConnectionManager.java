@@ -13,6 +13,7 @@ public class ConnectionManager {
     private static String dbUser = "root";
     private static String dbPassword = "";
     private static String dbURL = "jdbc:mysql://localhost:3306/stocks_exchange";
+    private static DataSource datasource;
 
     static {
         try {
@@ -23,6 +24,18 @@ public class ConnectionManager {
             System.out.println(message);
             Logger.getLogger(ConnectionManager.class.getName()).log(Level.SEVERE, message, ex);
             throw new RuntimeException(message, ex);
+        }
+
+        Context initCtx;
+
+        try {
+            initCtx = new InitialContext();
+            Context envCtx = (Context) initCtx.lookup("java:comp/env");
+
+            // Look up our data source
+            datasource = (DataSource) envCtx.lookup("jdbc/stocks_exchange");
+        } catch (NamingException ex) {
+            Logger.getLogger(ConnectionManager.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -39,21 +52,7 @@ public class ConnectionManager {
 
         return DriverManager.getConnection(dbURL, dbUser, dbPassword);
 
-//        Context initCtx;
-//        Connection conn = null;
-//        try {
-//            initCtx = new InitialContext();
-//            Context envCtx = (Context) initCtx.lookup("java:comp/env");
-//
-//            // Look up our data source
-//            DataSource ds = (DataSource) envCtx.lookup("jdbc/stocks_exchange");
-//            // Allocate and use a connection from the pool
-//            conn = ds.getConnection();
-//        } catch (NamingException ex) {
-//            Logger.getLogger(ConnectionManager.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        
-//        return conn;
+//        return datasource.getConnection();
     }
 
     /**
