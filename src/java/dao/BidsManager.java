@@ -330,6 +330,8 @@ public class BidsManager {
             return sum;
         } catch (SQLException ex) {
             Logger.getLogger(BidsManager.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            ConnectionManager.close(conn, pstmt, rs);
         }
         
         return null;
@@ -354,6 +356,8 @@ public class BidsManager {
             }
         } catch (SQLException ex) {
             Logger.getLogger(BidsManager.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            ConnectionManager.close(conn, pstmt, rs);
         }
         
         return userBids;
