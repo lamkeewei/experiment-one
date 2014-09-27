@@ -1,5 +1,6 @@
 package aa;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 // represents a matched bid and ask
@@ -7,12 +8,12 @@ public class MatchedTransaction {
 
   private Bid bid;
   private Ask ask;
-  private Date date;
+  private Timestamp date;
   private int price;
   private String stock;
 
   // constructor
-  public MatchedTransaction(Bid b, Ask a, Date d, int p) {
+  public MatchedTransaction(Bid b, Ask a, Timestamp d, int p) {
     this.bid = b;
     this.ask = a;
     this.date = d;
@@ -29,7 +30,7 @@ public class MatchedTransaction {
     return price;
   }
 
-  public Date getDate() {
+  public Timestamp getDate() {
     return date;
   }
   

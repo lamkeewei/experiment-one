@@ -1,5 +1,6 @@
 package aa;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 // represents a bid (in a buy order)
@@ -11,7 +12,7 @@ public class Bid {
     private String stock;
     private int price; // bid price
     private String userId; // user who made this buy order
-    private Date date;
+    private Timestamp date;
     private String status;
 
     // constructor
@@ -22,7 +23,7 @@ public class Bid {
         this.status = Bid.NOT_MATCHED;
     }
 
-    public Bid(int id, String stock, int price, String userId, Date date, String status) {
+    public Bid(int id, String stock, int price, String userId, Timestamp date, String status) {
         this.id = id;
         this.stock = stock;
         this.price = price;
@@ -44,7 +45,7 @@ public class Bid {
         return userId;
     }
 
-    public Date getDate() {
+    public Timestamp getDate() {
         return date;
     }
 

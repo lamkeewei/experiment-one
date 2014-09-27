@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -40,7 +41,7 @@ public class BidsManager {
                 String stock = rs.getString("stock");
                 int price = rs.getInt("price");
                 String userId = rs.getString("userid");
-                Date date = rs.getDate("date");
+                Timestamp date = rs.getTimestamp("date");
                 String status = rs.getString("status");
                 
                 bids.add(new Bid(id, stock, price, userId, date, status));
@@ -76,7 +77,7 @@ public class BidsManager {
                 String stock = rs.getString("stock");
                 int price = rs.getInt("price");
                 String userId = rs.getString("userid");
-                Date date = rs.getDate("date");
+                Timestamp date = rs.getTimestamp("date");
                 String status = rs.getString("status");
                 
                 bid = new Bid(id, stock, price, userId, date, status);
@@ -111,7 +112,7 @@ public class BidsManager {
                 String stock = rs.getString("stock");
                 int price = rs.getInt("price");
                 String userId = rs.getString("userid");
-                Date date = rs.getDate("date");
+                Timestamp date = rs.getTimestamp("date");
                 String status = rs.getString("status");
                 
                 bids.add(new Bid(id, stock, price, userId, date, status));
@@ -209,7 +210,7 @@ public class BidsManager {
                 String stockName = rs.getString("stock");
                 int price = rs.getInt("price");
                 String userId = rs.getString("userid");
-                Date date = rs.getDate("date");
+                Timestamp date = rs.getTimestamp("date");
                 String status = rs.getString("status");
                 
                 Bid bid = new Bid(id, stock, price, userId, date, status);
@@ -271,7 +272,7 @@ public class BidsManager {
                 int bidId = rs.getInt("id");
                 int price = rs.getInt("price");
                 String userId = rs.getString("userid");
-                Date date = rs.getDate("date");
+                Timestamp date = rs.getTimestamp("date");
                 String status = rs.getString("status");
                 
                 bid = new Bid(bidId, stock, price, userId, date, status);

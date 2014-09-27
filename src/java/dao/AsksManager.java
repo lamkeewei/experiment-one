@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -40,7 +41,7 @@ public class AsksManager {
                 String stock = rs.getString("stock");
                 int price = rs.getInt("price");
                 String userId = rs.getString("userid");
-                Date date = rs.getDate("date");
+                Timestamp date = rs.getTimestamp("date");
                 String status = rs.getString("status");
                 
                 asks.add(new Ask(id, stock, price, userId, date, status));
@@ -76,7 +77,7 @@ public class AsksManager {
                 String stock = rs.getString("stock");
                 int price = rs.getInt("price");
                 String userId = rs.getString("userid");
-                Date date = rs.getDate("date");
+                Timestamp date = rs.getTimestamp("date");
                 String status = rs.getString("status");
                 
                 ask = new Ask(askId, stock, price, userId, date, status);
@@ -111,7 +112,7 @@ public class AsksManager {
                 String stock = rs.getString("stock");
                 int price = rs.getInt("price");
                 String userId = rs.getString("userid");
-                Date date = rs.getDate("date");
+                Timestamp date = rs.getTimestamp("date");
                 String status = rs.getString("status");
                 
                 asks.add(new Ask(id, stock, price, userId, date, status));
@@ -209,7 +210,7 @@ public class AsksManager {
                 String stockName = rs.getString("stock");
                 int price = rs.getInt("price");
                 String userId = rs.getString("userid");
-                Date date = rs.getDate("date");
+                Timestamp date = rs.getTimestamp("date");
                 String status = rs.getString("status");
                 
                 Ask ask = new Ask(id, stockName, price, userId, date, status);
@@ -271,7 +272,7 @@ public class AsksManager {
                 int askId = rs.getInt("id");
                 int price = rs.getInt("price");
                 String userId = rs.getString("userid");
-                Date date = rs.getDate("date");
+                Timestamp date = rs.getTimestamp("date");
                 String status = rs.getString("status");
                 
                 ask = new Ask(askId, stock, price, userId, date, status);
