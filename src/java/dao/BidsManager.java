@@ -12,7 +12,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import util.ConnectionManager;
@@ -304,6 +306,55 @@ public class BidsManager {
         } finally {
             ConnectionManager.close(conn, pstmt, rs);
         }
-        
     }
+    
+    public static Integer getCreditUsed(String buyerUserId){
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        
+        try {
+            conn = ConnectionManager.getConnection();
+            String sql = "select sum(price) * 1000 from bids where userid=?";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, buyerUserId);
+            
+            rs = pstmt.executeQuery();
+            
+            Integer sum = 0;
+            while (rs.next()) {
+                sum = rs.getInt(1);
+            }
+            
+            return sum;
+        } catch (SQLException ex) {
+            Logger.getLogger(BidsManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return null;
+    }
+    
+    public static Map<String, Integer> getAllUserBidsTotal() {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        Map<String, Integer> userBids = new HashMap<String, Integer>();
+        try {
+            conn = ConnectionManager.getConnection();
+            String sql = "select userid, sum(price) * 1000 as 'sum' from bids group by userid;";
+            pstmt = conn.prepareCall(sql);
+            
+            rs = pstmt.executeQuery(sql);
+            while(rs.next()) {
+                String userid = rs.getString("userid");
+                int totalBids = rs.getInt("sum"); 
+                
+                userBids.put(userid, totalBids);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(BidsManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return userBids;
+    }    
 }

@@ -41,8 +41,7 @@ public class ExchangeBean {
   
   // TODO: This should be queried dynamically
   private Hashtable <String, Integer> creditRemaining = new Hashtable<String, Integer>();
-
-
+  
   // this method is called once at the end of each trading day. It can be called manually, or by a timed daemon
   // this is a good chance to "clean up" everything to get ready for the next trading day
   public void endTradingDay(){
@@ -116,22 +115,13 @@ public class ExchangeBean {
     }
   }
 
-  // get credit remaining for a particular buyer
-  private int getCreditRemaining(String buyerUserId){
-    if (!(creditRemaining.containsKey(buyerUserId))){
-      // this buyer is not in the hash table yet. hence create a new entry for him
-      creditRemaining.put(buyerUserId, DAILY_CREDIT_LIMIT_FOR_BUYERS);
-    }
-    return creditRemaining.get(buyerUserId);
-  }
-
   // check if a buyer is eligible to place an order based on his credit limit
   // if he is eligible, this method adjusts his credit limit and returns true
   // if he is not eligible, this method logs the bid and returns false
   private boolean validateCreditLimit(Bid b){
     // calculate the total price of this bid
     int totalPriceOfBid = b.getPrice() * 1000; // each bid is for 1000 shares
-    int remainingCredit = getCreditRemaining(b.getUserId());
+    int remainingCredit = DAILY_CREDIT_LIMIT_FOR_BUYERS - BidsManager.getCreditUsed(b.getUserId());
     int newRemainingCredit = remainingCredit - totalPriceOfBid;
 
     if (newRemainingCredit < 0){
@@ -139,11 +129,9 @@ public class ExchangeBean {
       logRejectedBuyOrder(b);
       return false;
     }
-    else {
-      // it's ok - adjust credit limit and return true
-      creditRemaining.put(b.getUserId(), newRemainingCredit);
+    
+    // it's ok - adjust credit limit and return true
       return true;
-    }
   }
 
   // call this to append all rejected buy orders to log file
@@ -188,12 +176,11 @@ public class ExchangeBean {
   public String getAllCreditRemainingForDisplay(){
     String returnString = "";
 
-    Enumeration items = creditRemaining.keys();
+    Map<String, Integer> userAmounts = BidsManager.getAllUserBidsTotal();
 
-    while (items.hasMoreElements()){
-      String key = (String)items.nextElement();
-      int value = creditRemaining.get(key);
-      returnString += "<tr><td>" + key + "</td><td>" + value + "</td></tr>";
+    for(String userId : userAmounts.keySet()){
+      int value = userAmounts.get(userId);
+      returnString += "<tr><td>" + userId + "</td><td>" + value + "</td></tr>";
     }
     return returnString;
   }
