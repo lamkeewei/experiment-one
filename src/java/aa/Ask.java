@@ -1,5 +1,6 @@
 package aa;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 // represents an Ask (in a sell order)
@@ -11,12 +12,12 @@ public class Ask {
     private String stock;
     private int price; // ask price
     private String userId; // user who made this sell order
-    private Date date;
+    private Timestamp date;
     private String status;
     
     // constructor
 
-    public Ask(int id, String stock, int price, String userId, Date date, String status) {
+    public Ask(int id, String stock, int price, String userId, Timestamp date, String status) {
         this.id = id;
         this.stock = stock;
         this.price = price;
@@ -45,7 +46,7 @@ public class Ask {
         return userId;
     }
 
-    public Date getDate() {
+    public Timestamp getDate() {
         return date;
     }
 

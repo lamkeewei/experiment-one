@@ -29,9 +29,9 @@ public class ExchangeBean {
   private ArrayList<MatchedTransaction> matchedTransactions = new ArrayList<MatchedTransaction>();
 
   // keeps track of the latest price for each of the 3 stocks
-  private int latestPriceForSmu = -1;
-  private int latestPriceForNus = -1;
-  private int latestPriceForNtu = -1;
+//  private int latestPriceForSmu = -1;
+//  private int latestPriceForNus = -1;
+//  private int latestPriceForNtu = -1;
 
   // keeps track of the remaining credit limits of each buyer. This should be
   // checked every time a buy order is submitted. Buy orders that breach the
@@ -45,10 +45,10 @@ public class ExchangeBean {
   // this method is called once at the end of each trading day. It can be called manually, or by a timed daemon
   // this is a good chance to "clean up" everything to get ready for the next trading day
   public void endTradingDay(){
-    // reset attributes
-    latestPriceForSmu = -1;
-    latestPriceForNus = -1;
-    latestPriceForNtu = -1;
+//    // reset attributes
+//    latestPriceForSmu = -1;
+//    latestPriceForNus = -1;
+//    latestPriceForNtu = -1;
 
     // dump all unfulfilled buy and sell orders
     AsksManager.clearAsks();
@@ -230,7 +230,6 @@ public class ExchangeBean {
       // to be done in v1.0
       // sendToBackOffice(match.toString());
 
-      updateLatestPrice(match);
       logMatchedTransactions();
     }
 
@@ -270,37 +269,8 @@ public class ExchangeBean {
       // to be done in v1.0
       // sendToBackOffice(match.toString());
 
-      updateLatestPrice(match);
       logMatchedTransactions();
     }
-  }
-
-  // updates either latestPriceForSmu, latestPriceForNus or latestPriceForNtu
-  // based on the MatchedTransaction object passed in
-  private void updateLatestPrice(MatchedTransaction m) {
-    String stock = m.getStock();
-    int price = m.getPrice();
-    // update the correct attribute
-    if (stock.equals("smu")) {
-      latestPriceForSmu = price;
-    } else if (stock.equals("nus")) {
-      latestPriceForNus = price;
-    } else if (stock.equals("ntu")) {
-      latestPriceForNtu = price;
-    }
-  }
-
-  // updates either latestPriceForSmu, latestPriceForNus or latestPriceForNtu
-  // based on the MatchedTransaction object passed in
-  public int getLatestPrice(String stock) {
-    if (stock.equals("smu")) {
-      return latestPriceForSmu;
-    } else if (stock.equals("nus")) {
-      return latestPriceForNus;
-    } else if (stock.equals("ntu")) {
-      return latestPriceForNtu;
-    }
-    return -1; // no such stock
   }
   
 //  public boolean sendToBackOffice(String txnDescription){

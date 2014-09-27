@@ -12,6 +12,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -35,7 +36,7 @@ public class MatchedTransactionManager {
             
             pstmt.setInt(1, match.getBuyId());
             pstmt.setInt(2, match.getAskId());
-            pstmt.setTimestamp(3, new java.sql.Timestamp(match.getDate().getTime()));
+            pstmt.setTimestamp(3, match.getDate());
             pstmt.setInt(4, match.getPrice());
             pstmt.setString(5, match.getStock());
             
@@ -68,7 +69,7 @@ public class MatchedTransactionManager {
                 String bidStock = rs.getString("B.stock");
                 int bidPrice = rs.getInt("B.price");
                 String bidUserId = rs.getString("B.userid");
-                Date bidDate = rs.getDate("B.date");
+                Timestamp bidDate = rs.getTimestamp("B.date");
                 String bidStatus = rs.getString("B.status");
                 
                 Bid bid = new Bid(bidId, stock, bidPrice, bidUserId, bidDate, bidStatus);
@@ -77,12 +78,12 @@ public class MatchedTransactionManager {
                 String askStock = rs.getString("A.stock");
                 int askPrice = rs.getInt("A.price");
                 String askUserId = rs.getString("A.userid");
-                Date askDate = rs.getTimestamp("A.date");
+                Timestamp askDate = rs.getTimestamp("A.date");
                 String askStatus = rs.getString("A.status");
                 
                 Ask ask = new Ask(askId, askStock, askPrice, askUserId, askDate, askStatus);
                 
-                Date matchedDate = rs.getDate("M.date");
+                Timestamp matchedDate = rs.getTimestamp("M.date");
                 int matchedPrice = rs.getInt("M.price");
                 
                 MatchedTransaction mtxn = new MatchedTransaction(bid, ask, matchedDate, matchedPrice);
@@ -94,6 +95,36 @@ public class MatchedTransactionManager {
             Logger.getLogger(MatchedTransactionManager.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
+    }
+    
+    public static int getLatestPrice(String stock) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        
+        try{
+            conn = ConnectionManager.getConnection();
+            String sql = "SELECT * from matched_transaction WHERE date = (SELECT MAX(date) AS latest_date FROM matched_transaction WHERE stock=?);";
+            pstmt = conn.prepareStatement(sql);
+            
+            pstmt.setString(1, stock);
+            rs = pstmt.executeQuery();
+            
+            int price = -1;
+                       
+            while(rs.next()) {
+                price = rs.getInt("price");
+            }            
+            
+            return price;
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(MatchedTransactionManager.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            ConnectionManager.close(conn, pstmt, rs);
+        }
+        
+        return -1; // default
     }
     
     public static void clearMatchedTransactions() {

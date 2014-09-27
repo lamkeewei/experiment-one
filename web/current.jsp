@@ -3,6 +3,7 @@
     Created on : Aug 30, 2012, 11:07:00 AM
     Author     : the saboteur
 --%>
+<%@page import="dao.MatchedTransactionManager"%>
 <%@ page import="aa.*" %>
 <jsp:useBean id="exchangeBean" scope="application" class="aa.ExchangeBean" />
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -25,7 +26,7 @@
                 <tbody>
                     <tr>
                         <td>Latest Price</td>
-                        <td><%=exchangeBean.getLatestPrice("smu")%></td>
+                        <td><%=MatchedTransactionManager.getLatestPrice("smu")%></td>
                     </tr>
                     <tr>
                         <td>Current Highest Bid</td>
@@ -49,7 +50,7 @@
                 <tbody>
                     <tr>
                         <td>Latest Price</td>
-                        <td><%=exchangeBean.getLatestPrice("nus")%></td>
+                        <td><%=MatchedTransactionManager.getLatestPrice("nus")%></td>
                     </tr>
                     <tr>
                         <td>Current Highest Bid</td>
@@ -73,7 +74,7 @@
                 <tbody>
                     <tr>
                         <td>Latest Price</td>
-                        <td><%=exchangeBean.getLatestPrice("ntu")%></td>
+                        <td><%=MatchedTransactionManager.getLatestPrice("ntu")%></td>
                     </tr>
                     <tr>
                         <td>Current Highest Bid</td>
