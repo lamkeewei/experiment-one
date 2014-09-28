@@ -218,7 +218,9 @@ public class ExchangeBean {
 
     // step 5: check if there is a match.
     // A match happens if the highest bid is bigger or equal to the lowest ask
-    if (highestBid.getPrice() >= lowestAsk.getPrice()) {
+    if (highestBid != null 
+            && lowestAsk != null 
+            && highestBid.getPrice() >= lowestAsk.getPrice()) {
       // a match is found!
       BidsManager.updateMatchBid(highestBid);
       AsksManager.updateMatchAsk(lowestAsk);

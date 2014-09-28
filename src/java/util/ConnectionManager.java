@@ -45,12 +45,7 @@ public class ConnectionManager {
      * @throws SQLException if an error occurs when connecting
      */
     public static Connection getConnection() throws SQLException {
-        String message = "dbURL: " + dbURL
-                + "  , dbUser: " + dbUser
-                + "  , dbPassword: " + dbPassword;
-
         return DriverManager.getConnection(dbURL, dbUser, dbPassword);
-
 //        return datasource.getConnection();
     }
 
