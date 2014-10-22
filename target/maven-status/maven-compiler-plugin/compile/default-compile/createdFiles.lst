@@ -1,0 +1,9 @@
+aa/util/BidsManager.class
+aa/services/AskService.class
+aa/util/AsksManager.class
+aa/hazelcast/AskMapStore.class
+aa/util/ConnectionManager.class
+aa/models/Bid.class
+aa/hazelcast/HazelcastConfig.class
+aa/hazelcast/BidMapStore.class
+aa/models/Ask.class
