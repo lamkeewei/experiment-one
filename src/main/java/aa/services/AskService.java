@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package aa.services;
 
 import aa.hazelcast.*;
@@ -50,5 +45,50 @@ public class AskService implements java.io.Serializable {
     public void addAsk(Ask ask) {
         ask.setId(generator.newId());
         map.put(Long.toString(ask.getId()), ask);
+    }
+    
+    public void clearAsks() {
+        map.clear();
+    }
+    
+    public Ask getLowestAsk(String stock) {
+        int minPrice = Integer.MAX_VALUE;
+        Ask minAsk = null;
+        for(Ask a:map.values()) {
+            if(a.getPrice()<minPrice && a.getStock().equals(stock)) {
+                minAsk = a;
+                minPrice = a.getPrice();
+            }
+        }
+        return minAsk;
+    }
+    
+    public List<Ask> getAsksByStock(String stock) {
+        List<Ask> result = new ArrayList<>();
+        for(Ask b:map.values()) {
+            if(b.getStock().equals(stock)) {
+                result.add(b);
+            }
+        }
+        return result;
+    }
+    
+    public List<Ask> getAllUnfulfiledAsks() {
+        List<Ask> result = new ArrayList<>();
+        for(Ask b:map.values()) {
+            if(b.getStatus().equalsIgnoreCase("not matched")) {
+                result.add(b);
+            }
+        }
+        return result;
+    }
+    
+    public boolean hasUnfulfilledAsks(String stock) {
+        for(Ask b:map.values()) {
+            if(b.getStock().equals(stock) && b.getStatus().equalsIgnoreCase("not matched")) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -20,7 +20,8 @@ public class Bid implements java.io.Serializable {
     private String status;
 
     // constructor
-    public Bid(String stock, int price, String userId) {
+    public Bid(long id, String stock, int price, String userId) {
+        this.id = id;
         this.stock = stock;
         this.price = price;
         this.userId = userId;
@@ -63,6 +64,10 @@ public class Bid implements java.io.Serializable {
 
     public String getStatus() {
         return status;
+    }
+    
+    public void setStatusMatched() {
+        status = MATCHED;
     }
     
     // toString

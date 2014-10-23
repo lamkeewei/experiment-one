@@ -42,8 +42,8 @@ public class AskMapStore implements MapStore<String, Ask> {
         List<Ask> asks = AsksManager.getAllAsks();
         for (Ask ask : asks) {
             String key = Long.toString(ask.getId());
-            if(keys.contains(key)) {
-                map.put(key,ask);
+            if (keys.contains(key)) {
+                map.put(key, ask);
             }
         }
         return map;
@@ -52,9 +52,13 @@ public class AskMapStore implements MapStore<String, Ask> {
     public Set<String> loadAllKeys() {
         Set<String> keys = new HashSet<>();
         List<Ask> asks = AsksManager.getAllAsks();
-        for(Ask ask:asks) {
-            keys.add(Long.toString(ask.getId()));
+        if (asks==null || asks.isEmpty()) {
+            return keys;
+        } else {
+            for (Ask ask : asks) {
+                keys.add(Long.toString(ask.getId()));
+            }
+            return keys;
         }
-        return keys;
     }
 }

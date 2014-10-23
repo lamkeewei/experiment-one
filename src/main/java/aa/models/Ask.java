@@ -70,6 +70,10 @@ public class Ask implements java.io.Serializable {
         return status;
     }
     
+    public void setStatusMatched() {
+        status = MATCHED;
+    }
+    
     // toString
     public String toString() {
         return "id: "  + id + ", stock: " + stock + ", price: " + price + ", userId: " + userId + ", date: " + date + ", status: " + status; 
