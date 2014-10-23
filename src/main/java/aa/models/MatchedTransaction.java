@@ -38,11 +38,11 @@ public class MatchedTransaction {
     return date;
   }
   
-  public long getBuyId() {
+  public String getBuyId() {
     return bid.getId();
   }
   
-  public long getAskId() {
+  public String getAskId() {
     return ask.getId();
   }
 

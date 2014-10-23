@@ -4,8 +4,9 @@ import aa.hazelcast.*;
 import aa.models.*;
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
+import com.hazelcast.core.IMap;
+import com.hazelcast.query.SqlPredicate;
 import java.util.*;
-import com.hazelcast.core.IdGenerator;
 
 /**
  *
@@ -13,25 +14,15 @@ import com.hazelcast.core.IdGenerator;
  */
 public class AskService implements java.io.Serializable {
     
-    private Map<String, Ask> map;
-    private IdGenerator generator;
+    private IMap<String, Ask> map;
     
     public AskService() {
         HazelcastInstance h = Hazelcast.newHazelcastInstance(HazelcastConfig.getConfig());
         map = h.getMap("asks");
-        generator = h.getIdGenerator("asks");
-        addAsk(new Ask("SMU", 12, "lamkeewei"));
-        addAsk(new Ask("NTU", 11, "damienng"));
-        addAsk(new Ask("SIM", 10, "lamkeewei"));
-        addAsk(new Ask("SMU", 12, "lamkeewei"));
     }
     
     public List<Ask> getAsks() {
-        List<Ask> result = new ArrayList<>();
-        for(String key:map.keySet()) {
-            result.add(map.get(key));
-        }
-        return result;
+        return new ArrayList(map.values());
     }
     
     public Ask getAsk(String id) {
@@ -43,8 +34,7 @@ public class AskService implements java.io.Serializable {
     }
     
     public void addAsk(Ask ask) {
-        ask.setId(generator.newId());
-        map.put(Long.toString(ask.getId()), ask);
+        map.put(ask.getId(), ask);
     }
     
     public void clearAsks() {
@@ -64,31 +54,14 @@ public class AskService implements java.io.Serializable {
     }
     
     public List<Ask> getAsksByStock(String stock) {
-        List<Ask> result = new ArrayList<>();
-        for(Ask b:map.values()) {
-            if(b.getStock().equals(stock)) {
-                result.add(b);
-            }
-        }
-        return result;
+        return new ArrayList<>(map.values(new SqlPredicate("stock='" + stock + "'")));
     }
     
     public List<Ask> getAllUnfulfiledAsks() {
-        List<Ask> result = new ArrayList<>();
-        for(Ask b:map.values()) {
-            if(b.getStatus().equalsIgnoreCase("not matched")) {
-                result.add(b);
-            }
-        }
-        return result;
+        return new ArrayList<>(map.values(new SqlPredicate("status='not matched'")));
     }
     
     public boolean hasUnfulfilledAsks(String stock) {
-        for(Ask b:map.values()) {
-            if(b.getStock().equals(stock) && b.getStatus().equalsIgnoreCase("not matched")) {
-                return true;
-            }
-        }
-        return false;
+        return map.values(new SqlPredicate("stock='" + stock + "'" + " AND status='not matched'")).size()>0;
     }
 }

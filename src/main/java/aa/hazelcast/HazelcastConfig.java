@@ -23,16 +23,27 @@ public class HazelcastConfig {
         mapCfg.setBackupCount(2);
         mapCfg.getMaxSizeConfig().setSize(10000);
         mapCfg.setTimeToLiveSeconds(300);
-
         MapStoreConfig mapStoreCfg = new MapStoreConfig();
         mapStoreCfg.setClassName("aa.hazelcast.AskMapStore").setEnabled(true);
         mapCfg.setMapStoreConfig(mapStoreCfg);
-
         NearCacheConfig nearCacheConfig = new NearCacheConfig();
         nearCacheConfig.setMaxSize(1000).setMaxIdleSeconds(120).setTimeToLiveSeconds(300);
         mapCfg.setNearCacheConfig(nearCacheConfig);
-
         cfg.addMapConfig(mapCfg);
+
+        mapCfg = new MapConfig();
+        mapCfg.setName("bids");
+        mapCfg.setBackupCount(2);
+        mapCfg.getMaxSizeConfig().setSize(10000);
+        mapCfg.setTimeToLiveSeconds(300);
+        mapStoreCfg = new MapStoreConfig();
+        mapStoreCfg.setClassName("aa.hazelcast.BidMapStore").setEnabled(true);
+        mapCfg.setMapStoreConfig(mapStoreCfg);
+        nearCacheConfig = new NearCacheConfig();
+        nearCacheConfig.setMaxSize(1000).setMaxIdleSeconds(120).setTimeToLiveSeconds(300);
+        mapCfg.setNearCacheConfig(nearCacheConfig);
+        cfg.addMapConfig(mapCfg);
+
         return cfg;
     }
 

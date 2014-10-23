@@ -34,14 +34,14 @@ public class AskMapStore implements MapStore<String, Ask> {
     }
 
     public Ask load(String key) {
-        return AsksManager.getAskById(Integer.parseInt(key));
+        return AsksManager.getAskById(key);
     }
 
     public Map<String, Ask> loadAll(Collection<String> keys) {
         Map<String, Ask> map = new ConcurrentHashMap<>();
         List<Ask> asks = AsksManager.getAllAsks();
         for (Ask ask : asks) {
-            String key = Long.toString(ask.getId());
+            String key = ask.getId();
             if (keys.contains(key)) {
                 map.put(key, ask);
             }
@@ -52,11 +52,11 @@ public class AskMapStore implements MapStore<String, Ask> {
     public Set<String> loadAllKeys() {
         Set<String> keys = new HashSet<>();
         List<Ask> asks = AsksManager.getAllAsks();
-        if (asks==null || asks.isEmpty()) {
+        if (asks == null || asks.isEmpty()) {
             return keys;
         } else {
             for (Ask ask : asks) {
-                keys.add(Long.toString(ask.getId()));
+                keys.add(ask.getId());
             }
             return keys;
         }

@@ -22,17 +22,6 @@ public class ConnectionManager implements java.io.Serializable {
             Logger.getLogger(ConnectionManager.class.getName()).log(Level.SEVERE, message, ex);
             throw new RuntimeException(message, ex);
         }
-
-//        Context initCtx;
-//
-//        try {
-//            initCtx = new InitialContext();
-//            Context envCtx = (Context) initCtx.lookup("java:comp/env");
-//            // Look up our data source
-//            datasource = (DataSource) envCtx.lookup("jdbc/stocks_exchange");
-//        } catch (NamingException ex) {
-//            Logger.getLogger(ConnectionManager.class.getName()).log(Level.SEVERE, null, ex);
-//        }
     }
 
     /**

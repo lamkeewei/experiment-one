@@ -1,9 +1,13 @@
 aa/util/BidsManager.class
+aa/services/ExchangeService.class
 aa/services/AskService.class
+aa/services/BidService.class
 aa/util/AsksManager.class
 aa/hazelcast/AskMapStore.class
+aa/models/MatchedTransaction.class
 aa/util/ConnectionManager.class
 aa/models/Bid.class
 aa/hazelcast/HazelcastConfig.class
 aa/hazelcast/BidMapStore.class
+aa/util/MatchedTransactionManager.class
 aa/models/Ask.class

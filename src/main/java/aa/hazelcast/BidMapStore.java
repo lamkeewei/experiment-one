@@ -34,16 +34,16 @@ public class BidMapStore implements MapStore<String, Bid> {
     }
 
     public Bid load(String key) {
-        return BidsManager.getBidById(Integer.parseInt(key));
+        return BidsManager.getBidById(key);
     }
 
     public Map<String, Bid> loadAll(Collection<String> keys) {
         Map<String, Bid> map = new HashMap<>();
         List<Bid> bids = BidsManager.getAllBids();
         for (Bid bid : bids) {
-            String key = Long.toString(bid.getId());
-            if(keys.contains(key)) {
-                map.put(key,bid);
+            String key = bid.getId();
+            if (keys.contains(key)) {
+                map.put(key, bid);
             }
         }
         return map;
@@ -52,8 +52,8 @@ public class BidMapStore implements MapStore<String, Bid> {
     public Set<String> loadAllKeys() {
         Set<String> keys = new HashSet<>();
         List<Bid> bids = BidsManager.getAllBids();
-        for(Bid bid:bids) {
-            keys.add(Long.toString(bid.getId()));
+        for (Bid bid : bids) {
+            keys.add(bid.getId());
         }
         return keys;
     }

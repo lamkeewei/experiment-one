@@ -30,7 +30,7 @@ public class AsksManager implements java.io.Serializable {
             rs = pstmt.executeQuery();
             
             while(rs.next()) {
-                int id = rs.getInt("id");
+                String id = rs.getString("id");
                 String stock = rs.getString("stock");
                 int price = rs.getInt("price");
                 String userId = rs.getString("userid");
@@ -51,7 +51,7 @@ public class AsksManager implements java.io.Serializable {
         return asks;
     }
     
-    public static Ask getAskById(long id) {
+    public static Ask getAskById(String id) {
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -62,11 +62,11 @@ public class AsksManager implements java.io.Serializable {
             String sql = "select * from asks where id=?";
             pstmt = conn.prepareStatement(sql);
             
-            pstmt.setLong(1, id);
+            pstmt.setString(1, id);
             rs = pstmt.executeQuery();
                        
             while(rs.next()) {
-                int askId = rs.getInt("id");
+                String askId = rs.getString("id");
                 String stock = rs.getString("stock");
                 int price = rs.getInt("price");
                 String userId = rs.getString("userid");
@@ -94,10 +94,10 @@ public class AsksManager implements java.io.Serializable {
         
         try {
             conn = ConnectionManager.getConnection();
-            String sql = "insert into asks(id, stock, price, userid, status) values(?,?,?,?,?) on duplicate key update stock=values(stock), price=values(price), userid=values(userid), status=values(status), ";
+            String sql = "insert into asks(id, stock, price, userid, status) values(?,?,?,?,?) on duplicate key update stock=values(stock), price=values(price), userid=values(userid), status=values(status)";
             pstmt = conn.prepareStatement(sql);
             
-            pstmt.setLong(1, ask.getId());
+            pstmt.setString(1,ask.getId());
             pstmt.setString(2, ask.getStock());
             pstmt.setInt(3, ask.getPrice());
             pstmt.setString(4, ask.getUserId());
@@ -120,7 +120,7 @@ public class AsksManager implements java.io.Serializable {
             String sql = "delete from asks where id=?";
             
             pstmt = conn.prepareStatement(sql);
-            pstmt.setLong(1, ask.getId());
+            pstmt.setString(1, ask.getId());
             
             pstmt.execute();
         } catch (SQLException ex) {
@@ -139,7 +139,7 @@ public class AsksManager implements java.io.Serializable {
             String sql = "UPDATE asks SET status=\"matched\" WHERE id=?";
             
             pstmt = conn.prepareStatement(sql);
-            pstmt.setLong(1, ask.getId());
+            pstmt.setString(1, ask.getId());
             
             pstmt.executeUpdate();
             

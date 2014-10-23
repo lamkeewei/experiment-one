@@ -32,7 +32,7 @@ public class BidsManager {
             rs = pstmt.executeQuery();
             
             while(rs.next()) {
-                int id = rs.getInt("id");
+                String id = rs.getString("id");
                 String stock = rs.getString("stock");
                 int price = rs.getInt("price");
                 String userId = rs.getString("userid");
@@ -53,7 +53,7 @@ public class BidsManager {
         return bids;
     }
     
-    public static Bid getBidById(int id) {
+    public static Bid getBidById(String id) {
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -64,18 +64,18 @@ public class BidsManager {
             String sql = "select * from bids where id=?";
             pstmt = conn.prepareStatement(sql);
             
-            pstmt.setInt(1, id);
+            pstmt.setString(1, id);
             rs = pstmt.executeQuery();
                        
             while(rs.next()) {
-                int bidId = rs.getInt("id");
+                String bidId = rs.getString("id");
                 String stock = rs.getString("stock");
                 int price = rs.getInt("price");
                 String userId = rs.getString("userid");
                 Timestamp date = rs.getTimestamp("date");
                 String status = rs.getString("status");
                 
-                bid = new Bid(id, stock, price, userId, date, status);
+                bid = new Bid(bidId, stock, price, userId, date, status);
             }            
             
             return bid; 
@@ -95,11 +95,11 @@ public class BidsManager {
         
         try {
             conn = ConnectionManager.getConnection();
-            String sql = "insert into bids(id, stock, price, userid, status) values(?,?,?,?,?) on duplicate key update stock=values(stock), price=values(price), userid=values(userid), status=values(status), ";
+            String sql = "insert into bids(id,stock, price, userid, status) values(?,?,?,?,?) on duplicate key update stock=values(stock), price=values(price), userid=values(userid), status=values(status)";
            
             pstmt = conn.prepareStatement(sql);
             
-            pstmt.setLong(1, bid.getId());
+            pstmt.setString(1,bid.getId());
             pstmt.setString(2, bid.getStock());
             pstmt.setInt(3, bid.getPrice());
             pstmt.setString(4, bid.getUserId());
@@ -122,7 +122,7 @@ public class BidsManager {
             String sql = "delete from bids where id=?";
             
             pstmt = conn.prepareStatement(sql);
-            pstmt.setLong(1, bid.getId());
+            pstmt.setString(1, bid.getId());
             
             pstmt.execute();
         } catch (SQLException ex) {
@@ -141,7 +141,7 @@ public class BidsManager {
             String sql = "UPDATE bids SET status=\"matched\" WHERE id=?";
             
             pstmt = conn.prepareStatement(sql);
-            pstmt.setLong(1, bid.getId());
+            pstmt.setString(1, bid.getId());
             
             pstmt.executeUpdate();
             
